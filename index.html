@@ -90,32 +90,60 @@
   footer { text-align:center; padding:2rem; border-top:1px solid var(--border); font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--muted); }
 
   /* MODAL */
-  .modal-overlay {
-    display:none;
-    position:fixed; inset:0; z-index:500;
-    background:rgba(17,24,39,0.5);
-    backdrop-filter:blur(4px);
-    align-items:center;
-    justify-content:center;
-    padding:2rem;
-  }
+  .modal-overlay { display:none; position:fixed; inset:0; z-index:500; background:rgba(17,24,39,0.5); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:2rem; }
   .modal-overlay.open { display:flex; }
-  .modal {
-    background:#fff;
-    border-radius:20px;
-    max-width:680px;
-    width:100%;
-    max-height:88vh;
-    overflow-y:auto;
-    box-shadow:0 24px 60px rgba(0,0,0,0.18);
-    animation:modalIn 0.3s ease;
-  }
+  .modal { background:#fff; border-radius:20px; max-width:700px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,0.18); animation:modalIn 0.3s ease; }
   @keyframes modalIn { from { opacity:0; transform:translateY(20px) scale(0.97); } to { opacity:1; transform:none; } }
   .modal-header { padding:2rem 2rem 1.2rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; }
   .modal-title { font-size:1.4rem; font-weight:800; color:var(--dark); letter-spacing:-0.01em; }
   .modal-close { background:none; border:none; font-size:1.4rem; color:var(--muted); cursor:pointer; line-height:1; padding:0.2rem; transition:color 0.2s; flex-shrink:0; }
   .modal-close:hover { color:var(--dark); }
   .modal-body { padding:1.8rem 2rem 2rem; }
+
+  /* Modal image area */
+  .modal-image-wrap {
+    width: 100%;
+    margin-bottom: 1.6rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .modal-image-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+  }
+  /* Placeholder shown when no image yet */
+  .modal-img-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 2.5rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-align: center;
+    width: 100%;
+  }
+  .modal-img-placeholder .ph-icon { font-size: 2.2rem; opacity: 0.5; }
+  .modal-img-placeholder .ph-label { font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:0.1em; }
+  /* Multiple images in a row */
+  .modal-image-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.6rem;
+  }
+  .modal-image-row .modal-image-wrap { margin-bottom: 0; min-height: 140px; }
+
   .modal-section { margin-bottom:1.6rem; }
   .modal-section-title { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--accent); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:0.75rem; }
   .modal-text { font-size:0.92rem; line-height:1.8; color:var(--text); }
@@ -140,6 +168,7 @@
     .hero-cta { flex-direction:column; }
     .modal { border-radius:14px; }
     .modal-header, .modal-body { padding-left:1.4rem; padding-right:1.4rem; }
+    .modal-image-row { grid-template-columns:1fr; }
   }
 </style>
 </head>
@@ -234,7 +263,7 @@
       <div class="project-icon">🏆</div>
       <div class="project-title">Logistics Warehouse Robot</div>
       <div class="badge-top3">🥉 TOP 3 / 27 TEAMS</div>
-      <p class="project-desc">Autonomous warehouse robot with PID-controlled drivetrain and gripper mechanism. Top 3 finish in ME department competition.</p>
+      <p class="project-desc">Autonomous warehouse robot with PID-controlled drivetrain and gripper. Top 3 in ME department competition.</p>
       <div class="project-tags">
         <span class="project-tag">LEGO EV3</span><span class="project-tag">PID Control</span><span class="project-tag">Hardware</span>
       </div>
@@ -304,7 +333,7 @@
 
 <footer>deyung sun · robotics engineer · built with intention</footer>
 
-<!-- ── MODALS ── -->
+<!-- MODALS -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal" id="modal-box">
     <div class="modal-header">
@@ -316,10 +345,39 @@
 </div>
 
 <script>
+// ─── IMAGE HELPER ───────────────────────────────────────────────
+// To add a real image, replace the placeholder() call with:
+//   img('your-filename.jpg', 'Alt text')
+// Make sure the image file is uploaded to your GitHub repo root.
+
+function img(src, alt) {
+  return `<div class="modal-image-wrap"><img src="${src}" alt="${alt}" loading="lazy"/></div>`;
+}
+
+function placeholder(label) {
+  return `
+    <div class="modal-image-wrap">
+      <div class="modal-img-placeholder">
+        <div class="ph-icon">🖼️</div>
+        <div class="ph-label">ADD IMAGE · ${label}</div>
+        <div style="font-size:0.75rem;margin-top:0.3rem;color:#c4c9d4">Upload file to GitHub repo, then replace placeholder() with img('filename.jpg','alt')</div>
+      </div>
+    </div>`;
+}
+
+function imgRow(a, b) {
+  return `<div class="modal-image-row">${a}${b}</div>`;
+}
+
+// ─── PROJECT DATA ────────────────────────────────────────────────
 const projects = {
   nav: {
     title: "Autonomous Navigation Stack",
-    body: `
+    body: () => `
+      ${imgRow(
+        placeholder("Gazebo simulation screenshot"),
+        placeholder("RViz path planning visualization")
+      )}
       <div class="modal-section">
         <div class="modal-section-title">Overview</div>
         <p class="modal-text">A full autonomy stack inspired by ROS 2 Nav2, extended to handle dynamic obstacles and autonomous replanning. Built from scratch to deeply understand every layer of a real navigation pipeline — from raw sensor data to motion commands.</p>
@@ -328,11 +386,11 @@ const projects = {
         <div class="modal-section-title">What I built</div>
         <ul class="modal-list">
           <li>Custom A* and BFS global planners for environment-aware path generation</li>
-          <li>DWA (Dynamic Window Approach) local planner with real-time trajectory scoring and collision checking</li>
-          <li>LiDAR-driven costmap pipeline — continuously updated from sensor data for live obstacle awareness</li>
+          <li>DWA local planner with real-time trajectory scoring and collision checking</li>
+          <li>LiDAR-driven costmap pipeline — continuously updated from sensor data</li>
           <li>Emergency stop logic triggered by proximity thresholds on live LiDAR scans</li>
           <li>Moving actor system in Gazebo to simulate pedestrians and dynamic obstacles</li>
-          <li>Closed-loop ROS 2 node architecture connecting perception → planning → control</li>
+          <li>Closed-loop ROS 2 node architecture: perception → planning → control</li>
         </ul>
       </div>
       <div class="modal-section">
@@ -353,19 +411,23 @@ const projects = {
   },
   robot: {
     title: "Robot Modeling & Simulation",
-    body: `
+    body: () => `
+      ${imgRow(
+        placeholder("URDF robot model in RViz"),
+        placeholder("Gazebo simulation view")
+      )}
       <div class="modal-section">
         <div class="modal-section-title">Overview</div>
-        <p class="modal-text">Designed and simulated complete robot models for use in ROS 2 and Gazebo environments, covering everything from kinematic structure and sensor placement to full simulation integration and debugging.</p>
+        <p class="modal-text">Designed and simulated complete robot models for ROS 2 and Gazebo environments — covering kinematic structure, sensor placement, simulation integration, and debugging.</p>
       </div>
       <div class="modal-section">
         <div class="modal-section-title">What I built</div>
         <ul class="modal-list">
-          <li>Robot models defined in URDF, SDF, and Xacro with correct joint definitions, links, and inertial properties</li>
-          <li>Sensor placement (LiDAR, odometry) with proper TF frame definitions</li>
-          <li>ros_gz_bridge configuration to synchronize data between Gazebo and ROS 2 topics</li>
-          <li>RViz dashboards for live visualization of robot state, sensor data, and navigation markers</li>
-          <li>TF tree debugging to verify correct coordinate frame transforms across the robot</li>
+          <li>Robot models in URDF, SDF, and Xacro with joints, links, and inertial properties</li>
+          <li>Sensor placement (LiDAR, odometry) with correct TF frame definitions</li>
+          <li>ros_gz_bridge configuration to synchronize Gazebo and ROS 2 topics</li>
+          <li>RViz dashboards for live visualization of robot state and sensor data</li>
+          <li>TF tree debugging to verify correct coordinate frame transforms</li>
         </ul>
       </div>
       <div class="modal-section">
@@ -378,7 +440,11 @@ const projects = {
   },
   ackermann: {
     title: "Ackermann Steering Mechanism",
-    body: `
+    body: () => `
+      ${imgRow(
+        placeholder("SolidWorks CAD model"),
+        placeholder("Physical prototype photo")
+      )}
       <div class="modal-section">
         <div class="modal-section-title">Overview</div>
         <p class="modal-text">Designed and simulated an Ackermann steering linkage to understand the geometric principles behind car-like vehicle turning. Combined CAD simulation with a physical prototype for full validation.</p>
@@ -386,11 +452,11 @@ const projects = {
       <div class="modal-section">
         <div class="modal-section-title">What I built</div>
         <ul class="modal-list">
-          <li>Full steering linkage CAD model in SolidWorks with all joints and constraints properly defined</li>
+          <li>Full steering linkage CAD model in SolidWorks with all joints and constraints defined</li>
           <li>Motion Study simulation to animate steering input and measure wheel angle outputs</li>
           <li>Verification of inner vs. outer wheel angle relationship against Ackermann geometry theory</li>
           <li>Turning radius deviation analysis across the full steering range</li>
-          <li>Physical prototype built to validate the simulation results in real hardware</li>
+          <li>Physical prototype built to validate simulation results in real hardware</li>
         </ul>
       </div>
       <div class="modal-section">
@@ -403,7 +469,8 @@ const projects = {
   },
   ev3: {
     title: "Logistics Warehouse Robot",
-    body: `
+    body: () => `
+      ${placeholder("Competition photo or robot photo")}
       <div class="modal-section">
         <div class="modal-badge">🥉 TOP 3 / 27 TEAMS — ME Department Competition</div>
         <div class="modal-section-title">Overview</div>
@@ -414,8 +481,8 @@ const projects = {
         <ul class="modal-list">
           <li>Drivetrain designed for stable, precise movement across the competition floor</li>
           <li>Gripping mechanism to reliably pick up and load target items</li>
-          <li>PID control loop implemented for smooth, accurate motor control</li>
-          <li>Iterative tuning process: ran structured test cycles, measured error, adjusted gains, repeated</li>
+          <li>PID control loop for smooth, accurate motor control</li>
+          <li>Iterative tuning: structured test cycles, measured error, adjusted gains, repeated</li>
           <li>Final system reliable enough to perform consistently under competition conditions</li>
         </ul>
       </div>
@@ -429,31 +496,35 @@ const projects = {
   },
   ml: {
     title: "Machine Learning Projects",
-    body: `
+    body: () => `
+      ${imgRow(
+        placeholder("CNN training results / accuracy plot"),
+        placeholder("Image inpainting before & after")
+      )}
       <div class="modal-section">
         <div class="modal-section-title">Overview</div>
-        <p class="modal-text">Three applied deep learning projects completed using PyTorch, covering computer vision and natural language processing. Models were trained individually even within group project settings.</p>
+        <p class="modal-text">Three applied deep learning projects using PyTorch, covering computer vision and NLP. Models were trained individually even within group project settings.</p>
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Project 1 — CNN Image Classification</div>
         <ul class="modal-list">
-          <li>Built a convolutional neural network to classify images into categories</li>
+          <li>Built a CNN to classify images into categories</li>
           <li>Implemented data preprocessing, augmentation, training loop, and evaluation</li>
-          <li>Tuned hyperparameters (learning rate, batch size, architecture depth) to improve accuracy</li>
+          <li>Tuned hyperparameters (learning rate, batch size, depth) to improve accuracy</li>
         </ul>
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Project 2 — Fake News Detection (NLP)</div>
         <ul class="modal-list">
-          <li>Built a text classification model to detect whether news articles are real or fake</li>
-          <li>Processed raw text data: tokenization, vectorization, and sequence modeling</li>
-          <li>Trained and evaluated model on labeled news dataset</li>
+          <li>Text classification model to detect real vs. fake news articles</li>
+          <li>Processed raw text: tokenization, vectorization, sequence modeling</li>
+          <li>Trained and evaluated on labeled news dataset</li>
         </ul>
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Project 3 — CNN Image Inpainting (Individual)</div>
         <ul class="modal-list">
-          <li>Designed a CNN architecture to reconstruct images after randomly dropping pixels</li>
+          <li>CNN architecture to reconstruct images after randomly dropping pixels</li>
           <li>Trained the model to learn spatial patterns and fill in missing regions</li>
           <li>Evaluated reconstruction quality across different dropout rates</li>
         </ul>
@@ -471,20 +542,17 @@ const projects = {
 function openModal(key) {
   const p = projects[key];
   document.getElementById('modal-title').textContent = p.title;
-  document.getElementById('modal-body').innerHTML = p.body;
+  document.getElementById('modal-body').innerHTML = p.body();
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
 }
-
 function closeModalOutside(e) {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
 }
-
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 const observer = new IntersectionObserver((entries) => {

@@ -494,50 +494,50 @@ const projects = {
       </div>
     `
   },
-  ml: {
+ml: {
     title: "Machine Learning Projects",
     body: () => `
       ${imgRow(
-        placeholder("CNN training results / accuracy plot"),
-        placeholder("Image inpainting before & after")
+        placeholder("CNN training results / loss curve"),
+        placeholder("Inpainting: corrupted vs. reconstructed image")
       )}
       <div class="modal-section">
         <div class="modal-section-title">Overview</div>
-        <p class="modal-text">Three applied deep learning projects using PyTorch, covering computer vision and NLP. Models were trained individually even within group project settings.</p>
+        <p class="modal-text">Three applied deep learning projects spanning computer vision and NLP — individually trained models covering classification, text detection, and learned image reconstruction.</p>
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Project 1 — CNN Image Classification</div>
         <ul class="modal-list">
-          <li>Built a CNN to classify images into categories</li>
-          <li>Implemented data preprocessing, augmentation, training loop, and evaluation</li>
-          <li>Tuned hyperparameters (learning rate, batch size, depth) to improve accuracy</li>
+          <li>Built a CNN in PyTorch to classify images across multiple categories</li>
+          <li>Implemented full pipeline: preprocessing, augmentation, training loop, and evaluation</li>
+          <li>Tuned learning rate, batch size, and network depth to improve accuracy</li>
         </ul>
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Project 2 — Fake News Detection (NLP)</div>
         <ul class="modal-list">
-          <li>Text classification model to detect real vs. fake news articles</li>
-          <li>Processed raw text: tokenization, vectorization, sequence modeling</li>
-          <li>Trained and evaluated on labeled news dataset</li>
+          <li>Text classification model to distinguish real vs. fabricated news articles</li>
+          <li>Pipeline covered tokenization, vectorization, and sequence modeling</li>
+          <li>Trained and evaluated on a labeled news dataset with precision/recall metrics</li>
         </ul>
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Project 3 — CNN Image Inpainting (Individual)</div>
         <ul class="modal-list">
-          <li>CNN architecture to reconstruct images after randomly dropping pixels</li>
-          <li>Trained the model to learn spatial patterns and fill in missing regions</li>
-          <li>Evaluated reconstruction quality across different dropout rates</li>
+          <li>Trained a CNN in MATLAB to reconstruct a grayscale image (Lena) with 20% of pixels randomly dropped — simulating corrupted or occluded sensor input</li>
+          <li>Benchmarked against an average filter baseline over 200 epochs (lr = 0.001)</li>
+          <li>CNN achieved MSE ≈ 0.0044 vs. filter baseline ≈ 0.0185 — roughly <strong>4× lower reconstruction error</strong> with sharper edge and texture recovery</li>
+          <li>Directly relevant to robotics perception: LiDAR dropouts, occluded depth frames, and noisy sensor data share the same partial-data structure — learned inpainting outperforms interpolation in all three cases</li>
         </ul>
       </div>
       <div class="modal-section">
         <div class="modal-section-title">Tech stack</div>
         <div class="modal-tags">
-          <span class="modal-tag">PyTorch</span><span class="modal-tag">CNN</span><span class="modal-tag">NLP</span><span class="modal-tag">Python</span><span class="modal-tag">NumPy</span><span class="modal-tag">Pandas</span>
+          <span class="modal-tag">MATLAB</span><span class="modal-tag">PyTorch</span><span class="modal-tag">CNN</span><span class="modal-tag">NLP</span><span class="modal-tag">Python</span><span class="modal-tag">NumPy</span><span class="modal-tag">Pandas</span>
         </div>
       </div>
     `
   }
-};
 
 function openModal(key) {
   const p = projects[key];
